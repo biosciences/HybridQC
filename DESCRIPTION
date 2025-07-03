@@ -1,0 +1,19 @@
+Package: HybridQC
+Type: Package
+Title: HybridQC: Machine Learning-Augmented Quality Control for Single-Cell RNA-seq
+Version: 0.1.0
+Authors@R: person("Kaitao", "Lai", email = "drktla@gmail.com", role = c("aut", "cre"))
+Description: Combines rule-based quality control with machine learning-based outlier detection for single-cell RNA-seq datasets.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 4.0.0)
+Imports:
+    Seurat,
+    dplyr,
+    reticulate
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

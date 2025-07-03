@@ -1,0 +1,100 @@
+---  
+title: "HybridQC: Smarter scRNA-seq Quality Control"
+author: "Kaitao Lai"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{HybridQC: Smarter scRNA-seq Quality Control}
+  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+`HybridQC` provides a hybrid framework for quality control (QC) in single-cell RNA-seq data.
+
+## Load Required Packages
+
+```{r libraries}
+library(Seurat)
+library(HybridQC)
+library(dplyr)
+```
+
+## Set working directory
+```{r wd}
+# Optional: change to your output path
+setwd(tempdir())  # or setwd("your/path")
+```
+
+## 📥 Load Example Dataset
+
+```{r load}
+seurat_obj <- LoadPBMC2k()  # or load your own Seurat object
+```
+
+## ⚙️ Step 1: Basic QC
+
+```{r basic-qc}
+qc_basic <- run_basic_qc(seurat_obj)
+head(qc_basic)
+write.csv(qc_basic, "results/qc/qc_basic.csv")
+```
+
+## 🧬 Step 2: Preprocessing + Mito %
+```{r preprocess}
+seurat_obj[["percent.mt"]] <- PercentageFeatureSet(seurat_obj, pattern = "^MT-")
+seurat_obj <- NormalizeData(seurat_obj)
+seurat_obj <- FindVariableFeatures(seurat_obj)
+seurat_obj <- ScaleData(seurat_obj)
+seurat_obj <- RunPCA(seurat_obj)
+seurat_obj <- RunUMAP(seurat_obj, dims = 1:10)
+```
+
+🧠 Step 3: Configure Conda and run Isolation Forest
+```{r ml-qc}
+reticulate::use_condaenv("hybridqc_py311", required = TRUE)
+reticulate::py_config()
+
+seurat_obj <- run_isolation_forest_qc(
+  seurat_obj,
+  python_path = "/opt/homebrew/Caskroom/miniconda/base/envs/hybridqc_py311/bin/python",
+  add_umap_plot = FALSE
+)
+
+# Save scores
+iso_scores <- FetchData(seurat_obj, vars = "isoforest_score")
+write.csv(iso_scores, "results/qc/isoforest_scores.csv")
+```
+
+## 📊 Plot and save UMAP
+```{r umap-plot}
+p <- FeaturePlot(seurat_obj, features = "isoforest_score", reduction = "umap") +
+  ggtitle("Isolation Forest Outlier Score (UMAP)")
+ggsave("results/plots/isoforest_umap.png", plot = p, width = 7, height = 5)
+p
+```
+
+## ✅ Step 4: Hybrid Filtering
+```{r hybrid-filter}
+ml_scores <- seurat_obj$isoforest_score
+filtered_obj <- filter_cells(seurat_obj, qc_basic, ml_scores)
+write.csv(filtered_obj@meta.data, "results/qc/filtered_cells_metadata.csv")
+```
+
+🔄 Build this vignette
+
+Run the following once in your R session:
+```{r}
+devtools::build_vignettes()
+```
+
+🧠 Tips
+• If you want to knit/test the Rmd directly: rmarkdown::render("vignettes/HybridQC.Rmd")
+• To view it in documentation: rebuild the package and go to Help > HybridQC > Vignettes

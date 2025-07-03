@@ -1,0 +1,15 @@
+.Rhistory
+.RData
+.Rproj.user/
+.Rproj
+.Rbuildignore
+.Rcheck/
+.Ruserdata
+.DS_Store
+README_cache/
+README_files/
+.vscode/
+*.html
+*.log
+*.aux
+*.out
