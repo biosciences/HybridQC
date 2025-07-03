@@ -4,6 +4,10 @@
 
 ---
 
+## 📄 Project Links
+- 📂 [Source Code](https://github.com/biosciences/HybridQC): Explore the full repository
+- 🔗 [Live Report](https://biosciences.github.io/HybridQC/HybridQC.html): View the interactive HTML output
+
 ## 🚀 Features
 
 - Rule-based filtering (nFeatures, nCounts, percent.mito)
