@@ -30,15 +30,16 @@ library(dplyr)
 ## Set working directory
 ```{r wd}
 # Optional: change to your output path
-setwd(tempdir())  # or setwd("your/path")
+#setwd(tempdir())  # or setwd("your/path")
+setwd("/Users/kl/Work/Applications/HybridQC")
 ```
 
 ## 📥 Load Example Dataset
 
 ```{r load}
-# pbmc_path <- "../inst/extdata/pbmc2k.csv"
-# seurat_obj <- LoadPBMC2k(dev_path = pbmc_path)
-seurat_obj <- LoadPBMC2k()
+pbmc_path <- "../inst/extdata/pbmc2k.csv"
+seurat_obj <- LoadPBMC2k(dev_path = pbmc_path)
+# seurat_obj <- LoadPBMC2k()
 ```
 
 ## ⚙️ Step 1: Basic QC
