@@ -8,15 +8,13 @@
 #'
 #' @examples
 #' pbmc <- LoadPBMC2k()
-LoadPBMC2k <- function() {
-  # Directly point to inst/extdata/ path (for development use)
-  data_path <- file.path("inst", "extdata", "pbmc2k.csv")
-
-  if (!file.exists(data_path)) {
-    stop("pbmc2k.csv not found in inst/extdata/. Please ensure the file exists.")
+LoadPBMC2k <- function(dev_path = NULL) {
+  if (!is.null(dev_path) && file.exists(dev_path)) {
+    counts <- read.csv(dev_path, row.names = 1, check.names = FALSE)
+  } else {
+    data_path <- system.file("extdata", "pbmc2k.csv", package = "HybridQC")
+    if (data_path == "") stop("pbmc2k.csv not found. Please provide dev_path.")
+    counts <- read.csv(data_path, row.names = 1, check.names = FALSE)
   }
-
-  counts <- read.csv(data_path, row.names = 1, check.names = FALSE)
-  seurat_obj <- Seurat::CreateSeuratObject(counts = as.matrix(counts))
-  return(seurat_obj)
+  Seurat::CreateSeuratObject(counts = as.matrix(counts))
 }
