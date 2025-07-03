@@ -47,7 +47,7 @@ seurat_obj <- LoadPBMC2k(dev_path = pbmc_path)
 ```{r basic-qc}
 qc_basic <- run_basic_qc(seurat_obj)
 head(qc_basic)
-write.csv(qc_basic, "results/qc/qc_basic.csv")
+write.csv(qc_basic, "../results/qc/qc_basic.csv")
 ```
 
 ## 🧬 Step 2: Preprocessing + Mito %
@@ -73,14 +73,14 @@ seurat_obj <- run_isolation_forest_qc(
 
 # Save scores
 iso_scores <- FetchData(seurat_obj, vars = "isoforest_score")
-write.csv(iso_scores, "results/qc/isoforest_scores.csv")
+write.csv(iso_scores, "../results/qc/isoforest_scores.csv")
 ```
 
 ## 📊 Plot and save UMAP
 ```{r umap-plot}
 p <- FeaturePlot(seurat_obj, features = "isoforest_score", reduction = "umap") +
   ggtitle("Isolation Forest Outlier Score (UMAP)")
-ggsave("results/plots/isoforest_umap.png", plot = p, width = 7, height = 5)
+ggsave("../results/plots/isoforest_umap.png", plot = p, width = 7, height = 5)
 p
 ```
 
@@ -88,7 +88,7 @@ p
 ```{r hybrid-filter}
 ml_scores <- seurat_obj$isoforest_score
 filtered_obj <- filter_cells(seurat_obj, qc_basic, ml_scores)
-write.csv(filtered_obj@meta.data, "results/qc/filtered_cells_metadata.csv")
+write.csv(filtered_obj@meta.data, "../results/qc/filtered_cells_metadata.csv")
 ```
 
 🔄 Build this vignette
