@@ -1,0 +1,81 @@
+\section{Summary}\label{summary}
+
+HybridQC is an R package that streamlines quality control (QC) of
+single-cell RNA sequencing (scRNA-seq) data by combining traditional
+threshold-based filtering with machine learning--based outlier
+detection. It provides an efficient and adaptive framework to identify
+low-quality cells in noisy or shallow-depth datasets using techniques
+such as Isolation Forest, while remaining compatible with widely adopted
+formats such as Seurat objects.
+
+The package is lightweight, easy to install, and suitable for
+small-to-medium scRNA-seq datasets in research settings. HybridQC is
+especially useful for projects involving non-model organisms, rare
+samples, or pilot studies, where automated and flexible QC is critical
+for reproducibility and downstream analysis.
+
+\section{Statement of Need}\label{statement-of-need}
+
+scRNA-seq experiments often suffer from technical noise, dropout events,
+and variability in sequencing depth. Traditional quality control relies
+on static cutoffs for metrics such as gene count, UMI count, and
+mitochondrial content, which may be suboptimal for non-standard
+datasets.
+
+HybridQC fills this gap by integrating machine learning
+methods---specifically unsupervised outlier detection---with traditional
+QC to improve filtering precision and robustness. This dual-level
+approach can better preserve informative but unconventional cell types
+and adapt dynamically to diverse datasets. No existing R packages
+provide this hybrid QC strategy as a standalone tool with seamless
+integration into Seurat-based pipelines.
+
+\section{Features}\label{features}
+
+\begin{itemize}
+\tightlist
+\item
+  Computes standard QC metrics: \texttt{nFeature\_RNA},
+  \texttt{nCount\_RNA}, \texttt{percent.mt}
+\item
+  Supports Isolation Forest outlier detection via \texttt{reticulate}
+  and \texttt{pyod}
+\item
+  Filters cells using a hybrid decision rule
+\item
+  Works on Seurat objects
+\item
+  Lightweight and suitable for quick prototyping or small studies
+\end{itemize}
+
+\section{Example Usage}\label{example-usage}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(Seurat)}
+\FunctionTok{library}\NormalTok{(HybridQC)}
+
+\NormalTok{pbmc }\OtherTok{\textless{}{-}} \FunctionTok{LoadPBMC2k}\NormalTok{()  }\CommentTok{\# Load example data}
+\NormalTok{qc\_basic }\OtherTok{\textless{}{-}} \FunctionTok{run\_basic\_qc}\NormalTok{(pbmc)}
+\NormalTok{ml\_scores }\OtherTok{\textless{}{-}} \FunctionTok{run\_isolation\_forest\_qc}\NormalTok{(pbmc)}
+\NormalTok{filtered }\OtherTok{\textless{}{-}} \FunctionTok{filter\_cells}\NormalTok{(pbmc, qc\_basic, ml\_scores)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Acknowledgements}\label{acknowledgements}
+
+The author thanks collaborators at University of Sydney for feedback on
+early concepts.
+
+\section{References}\label{references}
+
+• Luecken, M. D., Büttner, M., Chaichoompu, K., Danese, A., Interlandi,
+M., Mueller, M. F., Strobl, D. C., Zappia, L., Dugas, M., Colomé-Tatché,
+M., \& Theis, F. J. (2022). Benchmarking atlas-level data integration in
+single-cell genomics. Nature Methods, 19(1), 41--50.
+https://doi.org/10.1038/s41592-021-01336-8 • McInnes, L., Healy, J., \&
+Melville, J. (2018). UMAP: Uniform Manifold Approximation and Projection
+for Dimension Reduction. arXiv preprint arXiv:1802.03426.
+https://arxiv.org/abs/1802.03426 • Zhao, Y., Nasrullah, Z., \& Li, Z.
+(2018). PyOD: A Python Toolbox for Scalable Outlier Detection. arXiv
+preprint arXiv:1901.01588. https://arxiv.org/abs/1901.01588
