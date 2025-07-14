@@ -116,7 +116,7 @@ write.csv(filtered_obj@meta.data, file = "results/qc/filtered_cells_metadata.csv
 
 This package is accompanied by a JOSS submission:
 
-Lai K. (2025). HybridQC: Machine Learning-Augmented Quality Control for Single-Cell RNA-seq Data. Journal of Open Source Software (under review). [link pending]
+Lai K. (2025). *HybridQC: Machine Learning-Augmented Quality Control for Single-Cell RNA-seq Data*. arXiv: https://arxiv.org/abs/2507.08058 (submitted to *Journal of Open Source Software*).
 
 ## 🛠️ License
 
